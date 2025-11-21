@@ -99,11 +99,11 @@ class AudioCodec : Codec() {
     }
 
     companion object {
-        const val DEFAULT_SAMPLE_RATE: Int = 44100
+        const val DEFAULT_SAMPLE_RATE: Int = 48000
         const val DEFAULT_CHANNEL_COUNT: Int = 1
-        const val DEFAULT_BIT_RATE: Int = 64000
+        const val DEFAULT_BIT_RATE: Int = 192000
         const val DEFAULT_AAC_PROFILE = MediaCodecInfo.CodecProfileLevel.AACObjectLC
-        const val DEFAULT_KEY_MAX_INPUT_SIZE = 1024 * 2
+        const val DEFAULT_KEY_MAX_INPUT_SIZE = 1024 * 4
 
         private val TAG = AudioCodec::class.java.simpleName
     }
