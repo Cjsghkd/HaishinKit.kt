@@ -21,12 +21,3 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
         with:
           cache-read-only: false
-      - name: SetUp Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.4.4
-          bundler-cache: true
-      - name: fastlane
-        env:
-          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bundle exec fastlane review
