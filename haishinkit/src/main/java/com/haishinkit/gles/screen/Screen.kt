@@ -46,35 +46,35 @@ internal class Screen(
         }
 
     override fun bind(screenObject: ScreenObject) {
-        renderer.bind(screenObject)
+//        renderer.bind(screenObject)
     }
 
     override fun unbind(screenObject: ScreenObject) {
-        renderer.unbind(screenObject)
+//        renderer.unbind(screenObject)
     }
 
     override fun readPixels(lambda: (bitmap: Bitmap?) -> Unit) {
-        val bitmap =
-            createBitmap(frame.width(), frame.height())
-        val byteBuffer =
-            ByteBuffer.allocateDirect(frame.width() * frame.height() * 4).apply {
-                order(ByteOrder.LITTLE_ENDIAN)
-            }
-        framebuffer.render {
-            graphicsContext.readPixels(frame.width(), frame.height(), byteBuffer)
-        }
-        bitmap.copyPixelsFromBuffer(byteBuffer)
-        lambda(
-            Bitmap.createBitmap(
-                bitmap,
-                0,
-                0,
-                frame.width(),
-                frame.height(),
-                null,
-                false,
-            ),
-        )
+//        val bitmap =
+//            createBitmap(frame.width(), frame.height())
+//        val byteBuffer =
+//            ByteBuffer.allocateDirect(frame.width() * frame.height() * 4).apply {
+//                order(ByteOrder.LITTLE_ENDIAN)
+//            }
+//        framebuffer.render {
+//            graphicsContext.readPixels(frame.width(), frame.height(), byteBuffer)
+//        }
+//        bitmap.copyPixelsFromBuffer(byteBuffer)
+//        lambda(
+//            Bitmap.createBitmap(
+//                bitmap,
+//                0,
+//                0,
+//                frame.width(),
+//                frame.height(),
+//                null,
+//                false,
+//            ),
+//        )
     }
 
     override fun dispose() {
@@ -85,47 +85,47 @@ internal class Screen(
     override fun startRunning() {
         if (isRunning.get()) return
         isRunning.set(true)
-        graphicsContext.open(null)
-        graphicsContext.makeCurrent(null)
-        choreographer = Choreographer.getInstance()
+//        graphicsContext.open(null)
+//        graphicsContext.makeCurrent(null)
+//        choreographer = Choreographer.getInstance()
     }
 
     override fun stopRunning() {
         if (!isRunning.get()) return
         isRunning.set(false)
         choreographer = null
-        framebuffer.release()
-        renderer.release()
-        graphicsContext.close()
+//        framebuffer.release()
+//        renderer.release()
+//        graphicsContext.close()
     }
 
     override fun doFrame(frameTimeNanos: Long) {
-        if (isRunning.get()) {
-            for (callback in callbacks) {
-                callback.onEnterFrame()
-            }
-            choreographer?.postFrameCallback(this)
-        }
-
-        if (!framebuffer.isEnabled) return
-
-        layout(renderer)
-        framebuffer.render {
-            GLES20.glClearColor(
-                (Color.red(backgroundColor) / 255).toFloat(),
-                (Color.green(backgroundColor) / 255).toFloat(),
-                (Color.blue(backgroundColor) / 255).toFloat(),
-                0f,
-            )
-            GLES20.glEnable(GLES20.GL_BLEND)
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
-            GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
-            draw(renderer)
-            GLES20.glDisable(GLES20.GL_BLEND)
-        }
-
-        GLES20.glFlush()
-        Utils.checkGlError("glFlush")
+//        if (isRunning.get()) {
+//            for (callback in callbacks) {
+//                callback.onEnterFrame()
+//            }
+//            choreographer?.postFrameCallback(this)
+//        }
+//
+//        if (!framebuffer.isEnabled) return
+//
+//        layout(renderer)
+//        framebuffer.render {
+//            GLES20.glClearColor(
+//                (Color.red(backgroundColor) / 255).toFloat(),
+//                (Color.green(backgroundColor) / 255).toFloat(),
+//                (Color.blue(backgroundColor) / 255).toFloat(),
+//                0f,
+//            )
+//            GLES20.glEnable(GLES20.GL_BLEND)
+//            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
+//            GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA)
+//            draw(renderer)
+//            GLES20.glDisable(GLES20.GL_BLEND)
+//        }
+//
+//        GLES20.glFlush()
+//        Utils.checkGlError("glFlush")
     }
 
     companion object {
