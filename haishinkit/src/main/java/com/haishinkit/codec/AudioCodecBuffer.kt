@@ -8,7 +8,7 @@ internal class AudioCodecBuffer {
     var sampleRate: Int = 48000
     var presentationTimestamp: Long = DEFAULT_PRESENTATION_TIMESTAMP
         private set
-    private var pool = Pools.SynchronizedPool<ByteBuffer>(CAPACITY * 2)
+    private var pool = Pools.SynchronizedPool<ByteBuffer>(CAPACITY * 200)
     private var buffers = LinkedBlockingDeque<ByteBuffer>(CAPACITY)
     private var currentBuffer: ByteBuffer? = null
 
