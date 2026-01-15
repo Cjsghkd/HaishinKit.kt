@@ -260,8 +260,7 @@ class LottieScreen(
                     .createBitmap(
                         bounds.width(),
                         bounds.height(),
-                        Bitmap.Config.ARGB_8888,
-                    ).apply {
+                        Bitmap.Config.ARGB_8888).apply {
                         canvas = Canvas(this)
                     }
         }
