@@ -28,36 +28,51 @@ internal class AudioCodecBuffer {
         return ((sampleCount.toFloat() * 1000000f) / sampleRate.toFloat()).toLong()
     }
 
+//    fun render(byteBuffer: ByteBuffer): Int {
+//        if (buffers.isEmpty() && currentBuffer == null) {
+//            return 0
+//        }
+//
+//        if (currentBuffer == null) {
+//            currentBuffer = buffers.take()
+//            currentBuffer?.rewind()
+//        }
+//
+//        return currentBuffer?.let { source ->
+//            val length = minOf(byteBuffer.capacity(), source.remaining())
+//
+//            source.limit(source.position() + length)
+//            byteBuffer.put(source)
+//            source.limit(source.capacity())
+//
+//            if (!source.hasRemaining()) {
+//                pool.release(source)
+//                currentBuffer = null
+//            }
+//
+//            if (presentationTimestamp == DEFAULT_PRESENTATION_TIMESTAMP) {
+//                presentationTimestamp = System.nanoTime() / 1000
+//            } else {
+//                presentationTimestamp += timestamp(length / 2)
+//            }
+//
+//            return length
+//        } ?: 0
+//    }
+
     fun render(byteBuffer: ByteBuffer): Int {
-        if (buffers.isEmpty() && currentBuffer == null) {
-            return 0
+        val buffer = buffers.take()
+        buffer.rewind()
+        val start = byteBuffer.position()
+        byteBuffer.put(buffer)
+        pool.release(buffer)
+        val result = byteBuffer.position() - start
+        if (presentationTimestamp == DEFAULT_PRESENTATION_TIMESTAMP) {
+            presentationTimestamp = System.nanoTime() / 1000
+        } else {
+            presentationTimestamp += timestamp(result / 2)
         }
-
-        if (currentBuffer == null) {
-            currentBuffer = buffers.take()
-            currentBuffer?.rewind()
-        }
-
-        return currentBuffer?.let { source ->
-            val length = minOf(byteBuffer.capacity(), source.remaining())
-
-            source.limit(source.position() + length)
-            byteBuffer.put(source)
-            source.limit(source.capacity())
-
-            if (!source.hasRemaining()) {
-                pool.release(source)
-                currentBuffer = null
-            }
-
-            if (presentationTimestamp == DEFAULT_PRESENTATION_TIMESTAMP) {
-                presentationTimestamp = System.nanoTime() / 1000
-            } else {
-                presentationTimestamp += timestamp(length / 2)
-            }
-
-            return length
-        } ?: 0
+        return result
     }
 
     fun clear() {
