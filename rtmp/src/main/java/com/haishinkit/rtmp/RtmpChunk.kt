@@ -25,7 +25,9 @@ internal enum class RtmpChunk(
         val length = payload.limit()
         val timestamp = message.timestamp
         val chunkSize = socket.chunkSizeS
-        var buffer = socket.createByteBuffer(length(message.chunkStreamID) + chunkSize)
+        var remaining = min(chunkSize, length)
+        // Sized to the chunk it carries: a chunkSize (8 KB) buffer per ~0.5 KB audio frame multiplied the send queue's memory.
+        var buffer = socket.createByteBuffer(length(message.chunkStreamID) + remaining)
         putHeader(buffer, message.chunkStreamID)
         buffer
             .put((timestamp shr 16).toByte())
@@ -60,10 +62,9 @@ internal enum class RtmpChunk(
             }
         }
         var offset = 0
-        var remaining = min(chunkSize, length)
         do {
             if (0 < offset) {
-                buffer = socket.createByteBuffer(length(message.chunkStreamID) + chunkSize)
+                buffer = socket.createByteBuffer(THREE.length(message.chunkStreamID) + remaining)
                 THREE.putHeader(buffer, message.chunkStreamID)
             }
             buffer.put(payload.array(), offset, remaining)
