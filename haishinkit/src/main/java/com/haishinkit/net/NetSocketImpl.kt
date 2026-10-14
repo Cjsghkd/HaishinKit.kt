@@ -79,6 +79,7 @@ class NetSocketImpl :
     }
 
     override fun doOutput(buffer: ByteBuffer) {
+        if (!keepAlive) return
         try {
             buffer.flip()
             queueBytesOut.addAndGet(buffer.remaining().toLong())
