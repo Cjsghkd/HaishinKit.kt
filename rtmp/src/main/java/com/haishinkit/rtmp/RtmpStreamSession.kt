@@ -53,9 +53,6 @@ internal class RtmpStreamSession(
         }
 
     override suspend fun close(): Result<Unit> {
-        if (connection.isConnected) {
-            return Result.failure(IllegalStateException())
-        }
         _readyState.value = StreamSession.ReadyState.CLOSING
         connection.close()
         _readyState.value = StreamSession.ReadyState.CLOSED

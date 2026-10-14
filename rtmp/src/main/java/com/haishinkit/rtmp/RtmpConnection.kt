@@ -213,11 +213,9 @@ class RtmpConnection : EventDispatcher(null) {
 
     /**
      * Closes the connection from the server.
+     * The streams and the statistics timer are released even when the socket has already been disconnected.
      */
     fun close() {
-        if (!isConnected) {
-            return
-        }
         timerTask = null
         for (stream in streams) {
             stream.value.close()
