@@ -184,6 +184,14 @@ class RtmpStream(
      */
     var fcPublishName: String? = null
 
+    /**
+     * Specifies the maximum number of bytes allowed to wait in the outgoing socket queue.
+     * While the queue is over this limit, encoded audio frames are dropped instead of being queued,
+     * so a slow or stalled network can not grow the memory without limit.
+     */
+    @Volatile
+    var maxQueueBytesOut: Long = DEFAULT_MAX_QUEUE_BYTES_OUT
+
     @Volatile
     var currentFPS: Int = 0
         private set
@@ -483,6 +491,11 @@ class RtmpStream(
     }
 
     companion object {
+        /**
+         * The default of [maxQueueBytesOut], about 5 seconds of 192 kbps audio.
+         */
+        const val DEFAULT_MAX_QUEUE_BYTES_OUT: Long = 128 * 1024
+
         private const val DEFAULT_TIMESTAMP = 0
         private val TAG = RtmpStream::class.java.simpleName
     }

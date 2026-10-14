@@ -319,6 +319,10 @@ internal class RtmpMuxer(
                 if (audioTimestamp == 0L) {
                     audioTimestamp = info.presentationTimeUs
                 }
+                if (stream.maxQueueBytesOut < stream.connection.socket.queueBytesOut) {
+                    // Leaves audioTimestamp as it is so that the next frame's delta covers the dropped one.
+                    return true
+                }
                 val timestamp = (info.presentationTimeUs - audioTimestamp).toInt()
                 val audio = stream.messageFactory.createRtmpAudioMessage()
                 stream.doOutput(
